@@ -1,0 +1,11 @@
+bootsect.s 
+head.s
+setup.s
+
+计算机启动时，CPU的模式为实模式，可使用的内存空间为1MB。
+CPU先执行0xFFFF0的ROM-BIOS代码，该代码会进行系统检测，并将内存地址开始1KB的范围设置为向量表。
+将启动设备的第一个扇区(boot/bootsect.s)加载到内存绝对地址0x7C00处，将控制权交给bootsect.s。
+bootsect.s将自身移动到0x90000处，并将(boot/setup.s)读入内存0x90200，将控制权交给setup.s。
+setup.s将内核system模块(boot/head.s在system模块开始部位)复制到0x10000。而之后setup.s会将system模块代码移动到0x0000处。最后跳转执行到system模块开头。
+
+

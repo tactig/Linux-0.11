@@ -1,0 +1,25 @@
+Generall 64-bit Segment Descriptor:
+
+0x	XX   |X      | X         |X               | X             | XX  | XXXX | XXXX
+	Base |Flags  | Seg.limit |Read/Write Flags| Segment type  | Base| Base | Seg.limit
+
+Remark:	Base address: 	32 bit
+
+	Segment limit: 	20 bit
+
+	Flags: 		4  bit, set as: | G | D/B | L | AVL |
+				G: if G == 0, Granularity is 1 byte, otherwise 1 Mbytes
+				D/B: always set to 1 in 32 bit code and data segment. In a code seg, this bit is D,amd data seg. is B
+				L: always set to 0 in 32 bit mode
+				AVL: used by system software
+
+	Segment Type:	4  bit, value depends on segment type
+				if data segment: | 0 | E | W | A |
+				if code segment: | 1 | C | R | A |
+
+	Read/Write Flg:	4  bit, set as: | P | DPL | S |
+				S: if S == 0, segment is system segment, otherwise is code or data segment
+				DPL: Descriptor Privilege Level
+				P: if P == 0, indicates that this segment is not in memory currently, otherwise is
+
+

@@ -10,10 +10,15 @@ LD86	=ld86 -0
 AS	=as
 LD	=ld
 LDFLAGS	=-s -x -M
+##删除局部符号信息
+
 CC	=gcc $(RAMDISK)
 CFLAGS	=-Wall -O -fstrength-reduce -fomit-frame-pointer \
 -fcombine-regs -mstring-insns
+## Wall 警告所有，-O不优化
+
 CPP	=cpp -nostdinc -Iinclude
+## nostdinc表示gcc不使用默认的头文件搜索路径:/usr/local/include和/usr/include 等。-I指定搜索路径为./include 
 
 #
 # ROOT_DEV specifies the default root-device when making the image.
@@ -35,7 +40,7 @@ LIBS	=lib/lib.a
 .c.o:
 	$(CC) $(CFLAGS) \
 	-nostdinc -Iinclude -c -o $*.o $<
-
+##在本Makefile中，all:Image 先执行
 all:	Image
 
 Image: boot/bootsect boot/setup tools/system tools/build

@@ -12,9 +12,9 @@
  * the page directory.
  */
 
-!! 	本程序从0x00000000开始，代码段和数据段使用临时的描述符表（在0x9XXXX处),
-!!	0x90000~0x90200是硬件参数
-
+!! 	use temp descriptor table which locates at 0x90200+OFFSET
+!!	hardware arguments locate between 0x90000~0x90200
+!!	We are in protected mode this time and ignore all interrupts.
 
 
 .text

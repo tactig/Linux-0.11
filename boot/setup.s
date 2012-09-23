@@ -1,3 +1,9 @@
+!! In Makefile:
+!!boot/setup: boot/setup.s
+!!	$(AS86) -o boot/setup.o boot/setup.s
+!!	$(LD86) -s -o boot/setup boot/setup.o
+
+
 !
 !	setup.s		(C) 1991 Linus Torvalds
 !
@@ -5,20 +11,20 @@
 ! and putting them into the appropriate places in system memory.   		
 ! both setup.s and system has been loaded by the bootblock.        		
 ! setup.s 用于从BIOS中获取系统数据，并将其放入系统内存的适当的地方。
-! setup.s和系统都由bootblock加载
+! setup.s和系统都由bootsect加载
 !                                                                  		
 ! This code asks the bios for memory/disk/other parameters, and    		
 ! puts them in a "safe" place: 0x90000-0x901FF, ie where the       		
 ! boot-block used to be. It is then up to the protected mode       		
 ! system to read them from there before the area is overwritten    		
 ! for buffer-blocks.                                               		
-! 该段代码向BIOS获取 内存/硬盘 或者其他的数据，然后将它们放入一个“安全”
-! 地方： 0x90000-0x901FF ，该地址范围为boot-block存在的地方。
+! 该段代码向BIOS获取 内存/硬盘 和其他数据，然后将它们放入一个“安全”
+! 地方： 0x90000-0x901FF ，该地址范围曾是为bootsect所在的地址。
 !                                                                  		
                                                                    		
 ! NOTE! These had better be the same as in bootsect.s!             		
 
-!! 本程序起始于 0x90200
+!! This program starts at 0x9000:200
 
 INITSEG  = 0x9000	! we move boot here - out of the way
 SYSSEG   = 0x1000	! system loaded at 0x10000 (65536).
@@ -44,7 +50,7 @@ start:
 	mov	ah,#0x03	! read cursor pos
 	xor	bh,bh
 	int	0x10		! save it in known place, con_init fetches
-	mov	[0],dx		! it from 0x90000.
+	mov	[0],dx		! it from 0x90000.!! to 0x90001
 
 ! Get memory size (extended mem, kB)
 
@@ -114,7 +120,7 @@ is_disk1:
 
 	cli			! no interrupts allowed !
 
-! first we move the system to it's rightful place
+! first we move the system to it's rightful place	!! move system moudle to 0x000:0
 
 	mov	ax,#0x0000
 	cld			! 'direction'=0, movs moves forward
@@ -131,15 +137,15 @@ do_move:
 	movsw
 	jmp	do_move
 
-! then we load the segment descriptors
+! then we load the segment descriptors !! a temp descriptors
 
 end_move:
 	mov	ax,#SETUPSEG	! right, forgot this at first. didn't work :-)
 	mov	ds,ax
-	lidt	idt_48		! load idt with 0,0
-					!! load IDTR: 48 bit, 32-bit base address and 16-bit limit
-	lgdt	gdt_48		! load gdt with whatever appropriate
-					!! load GDTR: 48 bit, 32-bit base address and 16-bit limit
+	lidt	idt_48		! load idt with 0,0 !! line 235
+					!! IDTR: 48-bit register , 32-bit base address and 16-bit limit
+	lgdt	gdt_48		! load gdt with whatever appropriate !! line 239
+					!! GDTR: 48-bit register , 32-bit base address and 16-bit limit
 
 ! that was painless, now we enable A20
 
@@ -198,8 +204,8 @@ end_move:
 
 	mov	ax,#0x0001	! protected mode (PE) bit
 	lmsw	ax		! This is it!
-	jmpi	0,8		! jmp offset 0 of segment 8 (cs)
-
+	jmpi	0,8		! jmp offset 0 of segment 8 (cs) !! segment selector: 0x0000000000001 0 00 --> Previllege 0, GDT, Entry 1,line 222
+				!! according to Entry 1 of GDT and the offset of the instruction, the jump target address is 0x00000
 ! This routine checks that the keyboard command queue is empty
 ! No timeout is used - if this hangs there is something wrong with
 ! the machine, and we probably couldn't proceed anyway.
@@ -218,7 +224,7 @@ gdt:
 	.word	0x9A00		! code read/exec
 	.word	0x00C0		! granularity=4096, 386
 					!! 0x00 C 0 9A 000000 07FF
-					!! 	可读代码段
+					!! 	Readable Code seg.
 						
 
 	.word	0x07FF		! 8Mb - limit=2047 (2048*4096=8Mb)

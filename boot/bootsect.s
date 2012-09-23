@@ -1,3 +1,11 @@
+!!In Makefile:
+!! boot/bootsect:	boot/bootsect.s
+!!	$(AS86) -o boot/bootsect.o boot/bootsect.s
+!!	$(LD86) -s -o boot/bootsect boot/bootsect.o
+!! bootsect is a 512 bytes binary block
+
+
+
 !
 ! SYS_SIZE is the number of clicks (16 bytes) to be loaded.
 ! 0x3000 is 0x30000 bytes = 196kB, more than enough for current
@@ -51,9 +59,10 @@ start:					!! Now, program starts at 0x7C00
 	mov	cx,#256
 	sub	si,si				!! si == 0
 	sub	di,di				!! di == 0
+
 	rep				!! copy 0x07c0:0x0 to 0x9000:0x0 for 512 bytes,so bootsect
 					!!	occupies memory from 0x9000:0 to 0x9000:199 
-	movw				!! move a word from DS:SI to ES:DI for cx times.
+	movw				!! movw instruction: move a word from DS:SI to ES:DI for cx times.
 	jmpi	go,INITSEG		!! jmp to 0x9000:go
 go:	mov	ax,cs
 	mov	ds,ax				!! ds == 0x9000
@@ -62,17 +71,18 @@ go:	mov	ax,cs
 	mov	ss,ax				!! ss == 0x9000
 	mov	sp,#0xFF00		! arbitrary value >>512
 
-! load the setup-sectors directly after the bootblock.
+! load the setup-sectors directly after the bootblock.		!! setup sector is compiled from setup.s
 ! Note that 'es' is already set up.
 
-load_setup:					!! load setup.s
+load_setup:					
 	mov	dx,#0x0000		! drive 0, head 0
 	mov	cx,#0x0002		! sector 2, track 0
 	mov	bx,#0x0200		! address = 512, in INITSEG(0x9000)
 	mov	ax,#0x0200+SETUPLEN	! service 2, nr of sectors
 						!! SETUPLEN == 4 
 	int	0x13			! read it
-					!! store data in ES:BX(so setup starts from 0x9000:200)
+					!! store data in ES:BX(so setup starts at 0x9000:200)
+
 	jnc	ok_load_setup		! ok - continue
 	mov	dx,#0x0000
 	mov	ax,#0x0000		! reset the diskette
@@ -85,11 +95,11 @@ ok_load_setup:
 
 	mov	dl,#0x00
 	mov	ax,#0x0800		! AH=8 is get drive parameters
-	int	0x13			!! ES:DI point to list of floppy driver parameters
+	int	0x13			!! ES:DI point to a list of floppy driver parameters
 					!! at this time, ES:DI point to 0x9000:0
 	mov	ch,#0x00
 	seg cs
-	mov	sectors,cx			!! sector, line 243, a word.
+	mov	sectors,cx			!! variable sector, in line 262, a word.
 					!! cx is the number of sector in every track
 
 	mov	ax,#INITSEG		!reset to 0x9000
@@ -103,16 +113,17 @@ ok_load_setup:
 	
 	mov	cx,#24
 	mov	bx,#0x0007		! page 0, attribute 7 (normal)
-	mov	bp,#msg1		! line 244
+	mov	bp,#msg1		! line 265
 	mov	ax,#0x1301		! write string, move cursor
 	int	0x10
 
 ! ok, we've written the message, now
 ! we want to load the system (at 0x10000)
+!! system moudle is compiled from many source files (head.s,../init/main.c etc.)
 
 	mov	ax,#SYSSEG		!!0x1000
 	mov	es,ax		! segment of 0x010000
-	call	read_it			!! line 155
+	call	read_it			!! line 171
 	call	kill_motor
 
 ! After that we check which root-device to use. If the device is

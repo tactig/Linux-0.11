@@ -27,11 +27,11 @@ startup_32:
 	mov %ax,%es
 	mov %ax,%fs
 	mov %ax,%gs
-	lss _stack_start,%esp
+	lss _stack_start,%esp		##originally point to 0x9000:FF00 in bootsect.s,stack_start located in kernel/sched.c
 	call setup_idt
 	call setup_gdt
 	movl $0x10,%eax		# reload all the segment registers
-					## data segment
+					## 0x10, 2nd entry of GDT, data segment
 	mov %ax,%ds		# after changing gdt. CS was already
 	mov %ax,%es		# reloaded in 'setup_gdt'
 	mov %ax,%fs
@@ -84,15 +84,15 @@ check_x87:
  *  written by the page tables.
  */
 setup_idt:
-	lea ignore_int,%edx
-	hovl $0x00080000,%eax
+	lea ignore_int,%edx		##line 158
+	movl $0x00080000,%eax
 	movw %dx,%ax		/* selector = 0x0008 = cs */
 	movw $0x8E00,%dx	/* interrupt gate - dpl=0, present */
 
 	lea _idt,%edi
 	mov $256,%ecx
 rp_sidt:
-	movl %eax,(%edi)
+	movl %eax,(%edi)		##move "0x00008E000008 ignore_int _offset" to IDT, point to ignore_int procedure
 	movl %edx,4(%edi)
 	addl $8,%edi
 	dec %ecx

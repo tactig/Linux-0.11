@@ -21,8 +21,37 @@
  * some others too.
  */
 static inline _syscall0(int,fork)
+
+/*#define _syscall0(type,name) \
+type name(void) \				static inline int fork()
+{ \						{
+long __res; \						long __res;
+__asm__ volatile ("int $0x80" \				__asm__ volatile ("int $0x80" 
+	: "=a" (__res) \					:"=a" (__res)
+	: "0" (__NR_##name)); \					:"0" (__NR__fork));
+if (__res >= 0) \					if (__res >= 0)
+	return (type) __res; \					return (int) __res;
+errno = -__res; \					errno = - __res;
+return -1; \						return -1;
+}						}*/
+
 static inline _syscall0(int,pause)
 static inline _syscall1(int,setup,void *,BIOS)
+
+/*#define _syscall1(type,name,atype,a) \
+type name(atype a) \
+{ \
+long __res; \
+__asm__ volatile ("int $0x80" \
+	: "=a" (__res) \
+	: "0" (__NR_##name),"b" ((long)(a))); \
+if (__res >= 0) \
+	return (type) __res; \
+errno = -__res; \
+return -1; \
+}*/
+
+
 static inline _syscall0(int,sync)
 
 #include <linux/tty.h>
@@ -107,9 +136,9 @@ void main(void)		/* This really IS void, no error here. */
  * Interrupts are still disabled. Do necessary setups, then
  * enable them
  */
- 	ROOT_DEV = ORIG_ROOT_DEV;
- 	drive_info = DRIVE_INFO;
-	memory_end = (1<<20) + (EXT_MEM_K<<10);
+ 	ROOT_DEV = ORIG_ROOT_DEV;			//0x901FC
+ 	drive_info = DRIVE_INFO;			//0x90080
+	memory_end = (1<<20) + (EXT_MEM_K<<10);		//0x90002,memory_end = 1*1024*1024 + EXT_MEM_K*1024
 	memory_end &= 0xfffff000;
 	if (memory_end > 16*1024*1024)
 		memory_end = 16*1024*1024;
@@ -148,7 +177,7 @@ void main(void)		/* This really IS void, no error here. */
 
 static int printf(const char *fmt, ...)
 {
-	va_list args;
+	va_list args;						//char* args
 	int i;
 
 	va_start(args, fmt);
@@ -205,3 +234,13 @@ void init(void)
 	}
 	_exit(0);	/* NOTE! _exit, not exit() */
 }
+
+
+/*
+* memory illustration:
+*
+*	-------------------------------------------------------------
+*	| kernel | buffer memory | RAM disk(optional) | main memory |
+*	-------------------------------------------------------------
+*/
+

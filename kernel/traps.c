@@ -185,6 +185,18 @@ void trap_init(void)
 	set_trap_gate(0,&divide_error);
 	set_trap_gate(1,&debug);
 	set_trap_gate(2,&nmi);
+
+	/*__asm__ ("movw %%dx,%%ax\n\t" 
+	"movw %0,%%dx\n\t" 
+	"movl %%eax,%1\n\t" 
+	"movl %%edx,%2" 
+	: 
+	: "i" ((short) (0x8000+(0<<13)+(15<<8))), 
+	"o" (*((char *) (&idt[0]))), 
+	"o" (*(4+(char *) (&idt[0]))), 
+	"d" ((char *) (&divide_error)),"a" (0x00080000))*/
+
+
 	set_system_gate(3,&int3);	/* int3-5 can be called from all */
 	set_system_gate(4,&overflow);
 	set_system_gate(5,&bounds);

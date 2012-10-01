@@ -42,7 +42,7 @@ __asm__("movl %%eax,%%cr3"::"a" (0))
 /* these are not to be changed without changing head.s etc */
 #define LOW_MEM 0x100000
 #define PAGING_MEMORY (15*1024*1024)
-#define PAGING_PAGES (PAGING_MEMORY>>12)
+#define PAGING_PAGES (PAGING_MEMORY>>12)	//15MB/4K
 #define MAP_NR(addr) (((addr)-LOW_MEM)>>12)
 #define USED 100
 
@@ -401,9 +401,9 @@ void mem_init(long start_mem, long end_mem)
 	int i;
 
 	HIGH_MEMORY = end_mem;
-	for (i=0 ; i<PAGING_PAGES ; i++)
-		mem_map[i] = USED;
-	i = MAP_NR(start_mem);
+	for (i=0 ; i<PAGING_PAGES ; i++)	//PAGING_PAGES:15MB/4KB
+		mem_map[i] = USED; 		//USED == 100
+	i = MAP_NR(start_mem);			//(((addr)-0x100000)>>12) 
 	end_mem -= start_mem;
 	end_mem >>= 12;
 	while (end_mem-->0)

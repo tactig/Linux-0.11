@@ -34,7 +34,7 @@ __asm__ ("movw %%dx,%%ax\n\t" \
 	_set_gate(&idt[n],14,0,addr)
 
 #define set_trap_gate(n,addr) \
-	_set_gate(&idt[n],15,0,addr)
+	_set_gate(&idt[n],15,0,addr)					//idt: boot/head.s 
 
 #define set_system_gate(n,addr) \
 	_set_gate(&idt[n],15,3,addr)

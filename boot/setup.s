@@ -56,7 +56,7 @@ start:
 
 	mov	ah,#0x88
 	int	0x15
-	mov	[2],ax
+	mov	[2],ax			!! used by main.c
 
 ! Get video-card data:
 

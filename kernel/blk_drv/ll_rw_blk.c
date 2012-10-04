@@ -159,7 +159,19 @@ void blk_dev_init(void)
 	int i;
 
 	for (i=0 ; i<NR_REQUEST ; i++) {
-		request[i].dev = -1;
+		request[i].dev = -1;			//struct request request[NR_REQUEST]
 		request[i].next = NULL;
 	}
 }
+
+/*struct request {
+	int dev;		 -1 if no request
+	int cmd;		 READ or WRITE 
+	int errors;
+	unsigned long sector;
+	unsigned long nr_sectors;
+	char * buffer;
+	struct task_struct * waiting;
+	struct buffer_head * bh;
+	struct request * next;
+}*/

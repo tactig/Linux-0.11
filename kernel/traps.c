@@ -182,7 +182,7 @@ void trap_init(void)
 {
 	int i;
 
-	set_trap_gate(0,&divide_error);
+	set_trap_gate(0,&divide_error);		//trap gate privilege 0
 	set_trap_gate(1,&debug);
 	set_trap_gate(2,&nmi);
 
@@ -191,14 +191,14 @@ void trap_init(void)
 	"movl %%eax,%1\n\t" 
 	"movl %%edx,%2" 
 	: 
-	: "i" ((short) (0x8000+(0<<13)+(15<<8))), 
+	: "i" ((short) (0x8000+(dpl<<13)+(type<<8))), 	//gate entry  bit 32~47
 	"o" (*((char *) (&idt[0]))), 
 	"o" (*(4+(char *) (&idt[0]))), 
-	"d" ((char *) (&divide_error)),"a" (0x00080000))*/
+	"d" ((char *) (&addr)),"a" (0x00080000))*/	//eax: selector and offset
 
 
 	set_system_gate(3,&int3);	/* int3-5 can be called from all */
-	set_system_gate(4,&overflow);
+	set_system_gate(4,&overflow);		//system privilege 3
 	set_system_gate(5,&bounds);
 	set_trap_gate(6,&invalid_op);
 	set_trap_gate(7,&device_not_available);

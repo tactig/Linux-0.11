@@ -36,7 +36,7 @@ static void init(int port)
 
 void rs_init(void)
 {
-	set_intr_gate(0x24,rs1_interrupt);
+	set_intr_gate(0x24,rs1_interrupt);				//rs_io.s
 	set_intr_gate(0x23,rs2_interrupt);
 	init(tty_table[1].read_q.data);
 	init(tty_table[2].read_q.data);

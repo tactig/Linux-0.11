@@ -22,3 +22,7 @@ volatile void panic(const char * s)
 		sys_sync();
 	for(;;);
 }
+
+/*
+* 	panic() --> printk() --> vsprintf() 
+*/

@@ -28,7 +28,7 @@ type name(void) \				static inline int fork()
 long __res; \						long __res;
 __asm__ volatile ("int $0x80" \				__asm__ volatile ("int $0x80" 
 	: "=a" (__res) \					:"=a" (__res)
-	: "0" (__NR_##name)); \					:"0" (__NR__fork));
+	: "0" (__NR_##name)); \					:"0" (__NR_fork));			//__NR_fork == 2
 if (__res >= 0) \					if (__res >= 0)
 	return (type) __res; \					return (int) __res;
 errno = -__res; \					errno = - __res;
@@ -158,7 +158,7 @@ void main(void)		/* This really IS void, no error here. */
 	chr_dev_init();
 	tty_init();
 	time_init();
-	sched_init();
+	sched_init();						//set system call, 0x80
 	buffer_init(buffer_memory_end);
 	hd_init();
 	floppy_init();

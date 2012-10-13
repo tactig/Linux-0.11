@@ -199,7 +199,7 @@ void trap_init(void)
 
 	set_system_gate(3,&int3);	/* int3-5 can be called from all */
 	set_system_gate(4,&overflow);		//system privilege 3
-	set_system_gate(5,&bounds);
+	set_system_gate(5,&bounds);		//same as trap gate, but DPL == 3
 	set_trap_gate(6,&invalid_op);
 	set_trap_gate(7,&device_not_available);
 	set_trap_gate(8,&double_fault);

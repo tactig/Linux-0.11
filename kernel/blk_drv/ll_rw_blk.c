@@ -18,7 +18,7 @@
  * The request-struct contains all necessary data
  * to load a nr of sectors into memory
  */
-struct request request[NR_REQUEST];
+struct request request[NR_REQUEST];				//request table, 32 members
 
 /*
  * used to wait on when there are no free requests
@@ -29,7 +29,13 @@ struct task_struct * wait_for_request = NULL;
  *	do_request-address
  *	next-request
  */
-struct blk_dev_struct blk_dev[NR_BLK_DEV] = {
+
+/*struct blk_dev_struct {
+	void (*request_fn)(void);				//device handler
+	struct request * current_request;			//point to a member of request array.
+};*/ 
+
+struct blk_dev_struct blk_dev[NR_BLK_DEV] = {			//Block devices
 	{ NULL, NULL },		/* no_dev */
 	{ NULL, NULL },		/* dev mem */
 	{ NULL, NULL },		/* dev fd */
@@ -147,7 +153,7 @@ void ll_rw_block(int rw, struct buffer_head * bh)
 	unsigned int major;
 
 	if ((major=MAJOR(bh->b_dev)) >= NR_BLK_DEV ||
-	!(blk_dev[major].request_fn)) {
+	!(blk_dev[major].request_fn)) {						//make request according to the device handler
 		printk("Trying to read nonexistent block-device\n\r");
 		return;
 	}

@@ -32,7 +32,7 @@ startup	= 256		/* chars left in write queue when we restart it */
  */
 .align 2
 _rs1_interrupt:
-	pushl $_table_list+8
+	pushl $_table_list+8			/*tty_io.c*/
 	jmp rs_int
 .align 2
 _rs2_interrupt:

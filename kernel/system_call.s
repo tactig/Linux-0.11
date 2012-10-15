@@ -78,7 +78,7 @@ reschedule:
 	jmp _schedule
 .align 2
 _system_call:
-	cmpl $nr_system_calls-1,%eax
+	cmpl $nr_system_calls-1,%eax		#compare 71 to %eax
 	ja bad_sys_call
 	push %ds
 	push %es

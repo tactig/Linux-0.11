@@ -162,7 +162,7 @@ void main(void)		/* This really IS void, no error here. */
 	buffer_init(buffer_memory_end);
 	hd_init();
 	floppy_init();
-	sti(); move_to_user_mode(); if (!fork()) {		/* we count on this going ok */
+	sti(); move_to_user_mode(); if (!fork()) {		/* we count on this going ok */ // %eax = 2, int $0x80
 		init();
 	}
 /*

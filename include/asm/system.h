@@ -1,9 +1,9 @@
 #define move_to_user_mode() \
 __asm__ ("movl %%esp,%%eax\n\t" \
-	"pushl $0x17\n\t" \
+	"pushl $0x17\n\t" \		// LDT 2nd entry, RPL 3
 	"pushl %%eax\n\t" \
 	"pushfl\n\t" \
-	"pushl $0x0f\n\t" \
+	"pushl $0x0f\n\t" \		// LDT 1st entry, RPL 3
 	"pushl $1f\n\t" \
 	"iret\n" \
 	"1:\tmovl $0x17,%%eax\n\t" \

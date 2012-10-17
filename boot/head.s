@@ -240,7 +240,7 @@ gdt_descr:
 _idt:	.fill 256,8,0		# idt is uninitialized
 
 _gdt:	.quad 0x0000000000000000	/* NULL descriptor */
-	.quad 0x00c09a0000000fff	/* 16Mb */
-	.quad 0x00c0920000000fff	/* 16Mb */
+	.quad 0x00c09a0000000fff	/* 16Mb */	//Code, Execute/Read, Nonconforming
+	.quad 0x00c0920000000fff	/* 16Mb */	//Data, Read/Write, Expand-Up
 	.quad 0x0000000000000000	/* TEMPORARY - don't use */
 	.fill 252,8,0			/* space for LDT's and TSS's etc */

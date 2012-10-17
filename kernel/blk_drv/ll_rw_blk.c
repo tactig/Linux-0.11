@@ -35,7 +35,7 @@ struct task_struct * wait_for_request = NULL;
 	struct request * current_request;			//point to a member of request array.
 };*/ 
 
-struct blk_dev_struct blk_dev[NR_BLK_DEV] = {			//Block devices
+struct blk_dev_struct blk_dev[NR_BLK_DEV] = {			//7 Block devices
 	{ NULL, NULL },		/* no_dev */
 	{ NULL, NULL },		/* dev mem */
 	{ NULL, NULL },		/* dev fd */

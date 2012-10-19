@@ -79,22 +79,22 @@ struct task_struct {
 /* these are hardcoded - don't touch */
 	long state;	/* -1 unrunnable, 0 runnable, >0 stopped */
 	long counter;
-	long priority;
-	long signal;
+	long priority;	//counter == priority when task starts.
+	long signal;	//bitmap, every bit represent a signal, signal_value = bit_off + 1
 	struct sigaction sigaction[32];
 	long blocked;	/* bitmap of masked signals */
 /* various fields */
 	int exit_code;
 	unsigned long start_code,end_code,end_data,brk,start_stack;
-	long pid,father,pgrp,session,leader;
+	long pid,father/*father pid*/,pgrp/*process group number*/,session,leader;
 	unsigned short uid,euid,suid;
 	unsigned short gid,egid,sgid;
 	long alarm;
-	long utime,stime,cutime,cstime,start_time;
-	unsigned short used_math;
+	long utime/*user mode run time*/,stime/*system mode run time*/,cutime/*child */,cstime,start_time;
+	unsigned short used_math;	//use co-processor?
 /* file system info */
 	int tty;		/* -1 if no tty, so it must be signed */
-	unsigned short umask;
+	unsigned short umask;	//file creation mode mask
 	struct m_inode * pwd;
 	struct m_inode * root;
 	struct m_inode * executable;

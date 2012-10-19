@@ -114,21 +114,21 @@ struct m_inode {
 };
 
 struct file {
-	unsigned short f_mode;
+	unsigned short f_mode;		//file operation mode (RW bit)
 	unsigned short f_flags;
-	unsigned short f_count;
+	unsigned short f_count;		//reference count
 	struct m_inode * f_inode;
 	off_t f_pos;
 };
 
 struct super_block {
-	unsigned short s_ninodes;
-	unsigned short s_nzones;
-	unsigned short s_imap_blocks;
+	unsigned short s_ninodes;	//number of inodes
+	unsigned short s_nzones;	//number of zones
+	unsigned short s_imap_blocks;	//number of blocks that occupied by inode map
 	unsigned short s_zmap_blocks;
 	unsigned short s_firstdatazone;
 	unsigned short s_log_zone_size;
-	unsigned long s_max_size;
+	unsigned long s_max_size;	//file max size
 	unsigned short s_magic;
 /* These are only in memory */
 	struct buffer_head * s_imap[8];

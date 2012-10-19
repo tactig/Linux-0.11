@@ -143,10 +143,10 @@ int sys_open(const char * filename,int flag,int mode)
 
 	mode &= 0777 & ~current->umask;
 	for(fd=0 ; fd<NR_OPEN ; fd++)
-		if (!current->filp[fd])
+		if (!current->filp[fd])	
 			break;
 	if (fd>=NR_OPEN)
-		return -EINVAL;
+		return -EINVAL;					//opened file up to limit
 	current->close_on_exec &= ~(1<<fd);
 	f=0+file_table;
 	for (i=0 ; i<NR_FILE ; i++,f++)
@@ -186,7 +186,7 @@ int sys_open(const char * filename,int flag,int mode)
 
 int sys_creat(const char * pathname, int mode)
 {
-	return sys_open(pathname, O_CREAT | O_TRUNC, mode);
+	return sys_open(pathname, O_CREAT | O_TRUNC, mode);	//O_CREAT | O_TRUNC == 1100 0000 B
 }
 
 int sys_close(unsigned int fd)

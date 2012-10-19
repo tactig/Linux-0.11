@@ -152,7 +152,7 @@ int sys_open(const char * filename,int flag,int mode)
 	for (i=0 ; i<NR_FILE ; i++,f++)
 		if (!f->f_count) break;
 	if (i>=NR_FILE)
-		return -EINVAL;
+		return -EINVAL;					//file table up to limit
 	(current->filp[fd]=f)->f_count++;
 	if ((i=open_namei(filename,flag,mode,&inode))<0) {
 		current->filp[fd]=NULL;

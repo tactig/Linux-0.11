@@ -403,11 +403,11 @@ void mem_init(long start_mem, long end_mem)
 	HIGH_MEMORY = end_mem;
 	for (i=0 ; i<PAGING_PAGES ; i++)	//PAGING_PAGES:15MB/4KB
 		mem_map[i] = USED; 		//USED == 100
-	i = MAP_NR(start_mem);			//(((addr)-0x100000)>>12) 
+	i = MAP_NR(start_mem);			//(((addr)-0x100000)>>12) = (addr-0x100000)/4K, caculating the number of pages of the memory above 1M
 	end_mem -= start_mem;
 	end_mem >>= 12;
 	while (end_mem-->0)
-		mem_map[i++]=0;
+		mem_map[i++]=0;			//set the map of main memory to 0
 }
 
 void calc_mem(void)

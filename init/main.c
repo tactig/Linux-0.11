@@ -152,17 +152,19 @@ void main(void)		/* This really IS void, no error here. */
 #ifdef RAMDISK
 	main_memory_start += rd_init(main_memory_start, RAMDISK*1024);
 #endif
-	mem_init(main_memory_start,memory_end);
-	trap_init();
-	blk_dev_init();
+	mem_init(main_memory_start,memory_end);			//set map of main memory to 0;
+	trap_init();						//set trap gate whose DPL 0, point to the first entry of GDT
+	blk_dev_init();	
 	chr_dev_init();
 	tty_init();
 	time_init();
-	sched_init();						//set system call, 0x80
+	sched_init();						//set tss and ldt, set system call 0x80
 	buffer_init(buffer_memory_end);
 	hd_init();
 	floppy_init();
-	sti(); move_to_user_mode(); if (!fork()) {		/* we count on this going ok */ // fork: %eax = 2, int $0x80,call sys_creat
+	sti();
+	move_to_user_mode();
+	if (!fork()) {		/* we count on this going ok */ // fork: %eax = 2, int $0x80,call sys_creat
 		init();
 	}
 /*

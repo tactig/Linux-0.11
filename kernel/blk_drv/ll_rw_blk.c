@@ -164,8 +164,8 @@ void blk_dev_init(void)
 {
 	int i;
 
-	for (i=0 ; i<NR_REQUEST ; i++) {
-		request[i].dev = -1;			//struct request request[NR_REQUEST]
+	for (i=0 ; i<NR_REQUEST ; i++) {		//32 entries in request
+		request[i].dev = -1;			//set no request
 		request[i].next = NULL;
 	}
 }

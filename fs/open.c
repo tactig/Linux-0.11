@@ -186,7 +186,7 @@ int sys_open(const char * filename,int flag,int mode)
 
 int sys_creat(const char * pathname, int mode)
 {
-	return sys_open(pathname, O_CREAT | O_TRUNC, mode);	//O_CREAT | O_TRUNC == 1100 0000 B
+	return sys_open(pathname, O_CREAT | O_TRUNC, mode);	//O_CREAT | O_TRUNC == 100100 0000 B
 }
 
 int sys_close(unsigned int fd)

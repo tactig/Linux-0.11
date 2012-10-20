@@ -51,6 +51,20 @@ errno = -__res; \
 return -1; \
 }*/
 
+/*
+void* setup(void *BIOS) 
+{ 
+long __res; 
+__asm__ volatile ("int $0x80" 
+	: "=a" (__res) 
+	: "0" (__NR_setup),"b" ((long)(BIOS))); 		//__NR_setup == 0
+if (__res >= 0) 
+	return (void*) __res; 
+errno = -__res; 
+return -1; 
+}*/
+
+
 
 static inline _syscall0(int,sync)
 
@@ -164,7 +178,7 @@ void main(void)		/* This really IS void, no error here. */
 	floppy_init();
 	sti();
 	move_to_user_mode();
-	if (!fork()) {		/* we count on this going ok */ // fork: %eax = 2, int $0x80,call sys_creat
+	if (!fork()) {		/* we count on this going ok */ // fork: %eax = 2, int $0x80,call _sys_fork
 		init();
 	}
 /*

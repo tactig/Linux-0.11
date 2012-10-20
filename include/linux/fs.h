@@ -63,7 +63,7 @@ void buffer_init(long buffer_end);
 #define INC_PIPE(head) \
 __asm__("incl %0\n\tandl $4095,%0"::"m" (head))
 
-typedef char buffer_block[BLOCK_SIZE];
+typedef char buffer_block[BLOCK_SIZE];	//SIZE = 1024
 
 struct buffer_head {
 	char * b_data;			/* pointer to data block (1024 bytes) */

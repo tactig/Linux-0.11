@@ -152,6 +152,13 @@ extern void wake_up(struct task_struct ** p);
  */
 #define FIRST_TSS_ENTRY 4
 #define FIRST_LDT_ENTRY (FIRST_TSS_ENTRY+1)
+
+/*
+ * 					Layout of GDT
+ *---------------------------------------------------------------------------------------------------------
+ *| NULL | System code | System date | NULL | task 0 TSS | task 0 LDT | task 1 TSS | task 1 LDT | .........
+ *---------------------------------------------------------------------------------------------------------
+ */
 #define _TSS(n) ((((unsigned long) n)<<4)+(FIRST_TSS_ENTRY<<3))
 #define _LDT(n) ((((unsigned long) n)<<4)+(FIRST_LDT_ENTRY<<3))
 #define ltr(n) __asm__("ltr %%ax"::"a" (_TSS(n)))

@@ -172,7 +172,7 @@ void main(void)		/* This really IS void, no error here. */
 	chr_dev_init();
 	tty_init();
 	time_init();
-	sched_init();						//set tss and ldt, set system call 0x80
+	sched_init();						//set tss and ldt of task 0, set system call 0x80
 	buffer_init(buffer_memory_end);
 	hd_init();
 	floppy_init();

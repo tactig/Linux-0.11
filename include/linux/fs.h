@@ -94,13 +94,13 @@ struct m_inode {
 	unsigned short i_mode;
 	unsigned short i_uid;
 	unsigned long i_size;
-	unsigned long i_mtime;
+	unsigned long i_mtime;		//seconds from 1970.1.1:0
 	unsigned char i_gid;
 	unsigned char i_nlinks;
 	unsigned short i_zone[9];
 /* these are in memory also */
-	struct task_struct * i_wait;
-	unsigned long i_atime;
+	struct task_struct * i_wait;	//task waiting for this inode
+	unsigned long i_atime;		//last access time
 	unsigned long i_ctime;
 	unsigned short i_dev;
 	unsigned short i_num;
@@ -146,7 +146,7 @@ struct super_block {
 struct d_super_block {
 	unsigned short s_ninodes;
 	unsigned short s_nzones;
-	unsigned short s_imap_blocks;
+	unsigned short s_imap_blocks;	//numbers of blocks occupied by inode
 	unsigned short s_zmap_blocks;
 	unsigned short s_firstdatazone;
 	unsigned short s_log_zone_size;

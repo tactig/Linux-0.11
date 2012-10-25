@@ -16,7 +16,7 @@ int open(const char * filename, int flag, ...)
 	va_start(arg,flag);
 	__asm__("int $0x80"
 		:"=a" (res)
-		:"0" (__NR_open),"b" (filename),"c" (flag),
+		:"0" (__NR_open),"b" (filename),"c" (flag),		//sys_open
 		"d" (va_arg(arg,int)));
 	if (res>=0)
 		return res;

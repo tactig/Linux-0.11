@@ -96,7 +96,7 @@ struct task_struct {
 	int tty;		/* -1 if no tty, so it must be signed */
 	unsigned short umask;	//file creation mode mask
 	struct m_inode * pwd;
-	struct m_inode * root;
+	struct m_inode * root;	//inode of root directory
 	struct m_inode * executable;
 	unsigned long close_on_exec;
 	struct file * filp[NR_OPEN];

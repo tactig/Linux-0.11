@@ -91,19 +91,19 @@ struct d_inode {
 };
 
 struct m_inode {
-	unsigned short i_mode;
+	unsigned short i_mode;		//file type and attribute(rwx)
 	unsigned short i_uid;
-	unsigned long i_size;
+	unsigned long i_size;		//file size
 	unsigned long i_mtime;		//seconds from 1970.1.1:0
 	unsigned char i_gid;
 	unsigned char i_nlinks;
-	unsigned short i_zone[9];
+	unsigned short i_zone[9];	//file data zones
 /* these are in memory also */
 	struct task_struct * i_wait;	//task waiting for this inode
 	unsigned long i_atime;		//last access time
 	unsigned long i_ctime;
-	unsigned short i_dev;
-	unsigned short i_num;
+	unsigned short i_dev;		//device number where inode locates
+	unsigned short i_num;		//inode number
 	unsigned short i_count;
 	unsigned char i_lock;
 	unsigned char i_dirt;
@@ -133,7 +133,7 @@ struct super_block {
 /* These are only in memory */
 	struct buffer_head * s_imap[8];
 	struct buffer_head * s_zmap[8];
-	unsigned short s_dev;
+	unsigned short s_dev;		//device number where super block locates
 	struct m_inode * s_isup;
 	struct m_inode * s_imount;
 	unsigned long s_time;

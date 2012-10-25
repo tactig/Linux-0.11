@@ -238,7 +238,7 @@ static struct m_inode * get_dir(const char * pathname)
 		panic("No root inode");
 	if (!current->pwd || !current->pwd->i_count)
 		panic("No cwd inode");
-	if ((c=get_fs_byte(pathname))=='/') {
+	if ((c=get_fs_byte(pathname))=='/') { //get first byte of argument
 		inode = current->root;
 		pathname++;
 	} else if (c)
@@ -285,7 +285,7 @@ static struct m_inode * dir_namei(const char * pathname,
 	if (!(dir = get_dir(pathname)))
 		return NULL;
 	basename = pathname;
-	while (c=get_fs_byte(pathname++))
+	while (c=get_fs_byte(pathname++)) 
 		if (c=='/')
 			basename=pathname;
 	*namelen = pathname-basename-1;
@@ -343,7 +343,7 @@ int open_namei(const char * pathname, int flag, int mode,
 	struct buffer_head * bh;
 	struct dir_entry * de;
 
-	if ((flag & O_TRUNC) && !(flag & O_ACCMODE))
+	if ((flag & O_TRUNC) && !(flag & O_ACCMODE))//flag contain O_TRUNC without O_ACCMODE
 		flag |= O_WRONLY;
 	mode &= 0777 & ~current->umask;
 	mode |= I_REGULAR;

@@ -141,7 +141,7 @@ int sys_open(const char * filename,int flag,int mode)
 	struct file * f;
 	int i,fd;
 
-	mode &= 0777 & ~current->umask;
+	mode &= 0777 & ~current->umask;				//0777 means not readable/writable/executable
 	for(fd=0 ; fd<NR_OPEN ; fd++)
 		if (!current->filp[fd])	
 			break;

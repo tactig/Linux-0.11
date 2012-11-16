@@ -1,0 +1,101 @@
+digraph system_struct {
+	node [shape=plaintext]
+	buffer_head_hash_table [label=<
+		<TABLE>
+			<TR><TD BGCOLOR="red">Buffer head hash table</TD></TR>
+			<TR><TD PORT="1">address to buffer_head 1 </TD></TR>
+			<TR><TD PORT="2">address to buffer_head 2 </TD></TR>
+			<TR><TD>address to buffer_head 3 </TD></TR>
+			<TR><TD>address to buffer_head 4 </TD></TR>
+			<TR><TD>address to buffer_head 5 </TD></TR>
+			<TR><TD> ... </TD></TR>
+			<TR><TD>address to buffer_head 307 </TD></TR>
+		</TABLE>
+		>];
+
+	buffer_head [style=filled fillcolor=steelblue label=<
+		<TABLE>
+			<TR><TD BGCOLOR="red">Buffer head</TD></TR>
+			<TR><TD PORT="data">b_data</TD></TR>
+			<TR><TD>b_blocknr</TD></TR>
+			<TR><TD>b_uptodate</TD></TR>
+			<TR><TD>b_dirt</TD></TR>
+			<TR><TD>b_count</TD></TR>
+			<TR><TD>b_block</TD></TR>
+
+
+			<TR><TD>...</TD></TR>
+		</TABLE>
+	>]
+
+	inode_table [label=<
+		<TABLE>
+			<TR><TD BGCOLOR="red">m_inode table </TD></TR>
+			<TR><TD PORT="1">inode 1 </TD></TR>
+			<TR><TD PORT="2">inode 2 </TD></TR>
+			<TR><TD>inode 3 </TD></TR>
+			<TR><TD>inode 4 </TD></TR>
+			<TR><TD>inode 5 </TD></TR>
+			<TR><TD PORT="x"> ... </TD></TR>
+			<TR><TD>inode 32 </TD></TR>
+		</TABLE>
+	>];
+
+	file_table [label=<
+		<TABLE>
+			<TR><TD BGCOLOR="red">file table </TD></TR>
+			<TR><TD PORT="1">file 1 </TD></TR>
+			<TR><TD PORT="2">file 2 </TD></TR>
+			<TR><TD>file 3 </TD></TR>
+			<TR><TD>file 4 </TD></TR>
+			<TR><TD>file 5 </TD></TR>
+			<TR><TD> ... </TD></TR>
+			<TR><TD>file 64 </TD></TR>
+		</TABLE>
+	>];
+
+	file_struct [label=<
+		<TABLE>
+			<TR><TD BGCOLOR="red">file struct </TD></TR>
+			<TR><TD PORT="1">f_mode</TD></TR>
+			<TR><TD PORT="2">f_flags</TD></TR>
+			<TR><TD>f_count</TD></TR>
+			<TR><TD PORT="inode">f_inode</TD></TR>
+			<TR><TD>f_pos</TD></TR>
+		</TABLE>
+	>]
+
+	task [label=<
+		<TABLE>
+			<TR><TD BGCOLOR="red">task</TD></TR>
+			<TR><TD PORT="1">task 1</TD></TR>
+			<TR><TD PORT="2">task 2</TD></TR>
+			<TR><TD>task 3</TD></TR>
+			<TR><TD>task 4</TD></TR>
+			<TR><TD>...</TD></TR>
+			<TR><TD>task 64</TD></TR>
+		</TABLE>
+
+	>]
+	
+	task_struct [shape=record label="{ ... | tty | m_inode *pwd | m_inode *root | m_inode *executable | close_on_exec | <flip>file* flip[20] | desc_struct ldt[3] | tss_struct tss }"];
+
+	buffer_data [style=filled fillcolor=grey label="data in buffer memory"];
+	m_inode [shape=record style=filled fillcolor=grey label="{unsigned short i_mode; | unsigned short i_uid; |  unsigned long i_size; | unsigned long i_mtimeb unsigned char i_gid; |  unsigned char i_nlinks; |  unsigned short i_zone[9]; |  struct task_struct * i_wait; |  unsigned long i_atime; |  unsigned long i_ctime; |  unsigned short i_dev; |  unsigned short i_num; |  unsigned short i_count; |  unsigned char i_lock; |  unsigned char i_dirt; |  unsigned char i_pipe; |  unsigned char i_mount; |  unsigned char i_seek; |  unsigned char i_update;} "];
+
+	block_device [style=filled fillcolor=grey label="block devices"];
+	hard_drive [style=filled fillcolor=grey label="hard drive"];
+	floppy_drive [style=filled fillcolor=grey label="floppy drive"];
+	other_drive [style=filled fillcolor=grey label="others"];
+	
+	buffer_head_hash_table:1 -> buffer_head [rankdir=LR];
+	buffer_head:data -> buffer_data [label="address to"];
+	inode_table -> m_inode [label="every entry is"];
+	m_inode -> block_device [style=dotted];
+	block_device -> {hard_drive floppy_drive other_drive};
+	file_table -> file_struct [label="every entry is"];
+	file_struct:inode -> inode_table:x [label="address to"];
+	task:1 -> task_struct [label="address to"];
+	task_struct:flip -> file_table;
+
+}

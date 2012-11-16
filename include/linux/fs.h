@@ -94,7 +94,7 @@ struct m_inode {
 	unsigned short i_mode;		//file type and attribute(rwx)
 	unsigned short i_uid;
 	unsigned long i_size;		//file size
-	unsigned long i_mtime;		//seconds from 1970.1.1:0
+	unsigned long i_mtime;		//seconds since 1970.1.1:0
 	unsigned char i_gid;
 	unsigned char i_nlinks;
 	unsigned short i_zone[9];	//file data zones
@@ -159,8 +159,19 @@ struct dir_entry {
 	char name[NAME_LEN];
 };
 
+/*
+#define NR_OPEN 20
+#define NR_INODE 32
+#define NR_FILE 64
+#define NR_SUPER 8
+#define NR_HASH 307
+#define NR_BUFFERS nr_buffers
+#define BLOCK_SIZE 1024
+#define BLOCK_SIZE_BITS 10
+*/
+
 extern struct m_inode inode_table[NR_INODE];
-extern struct file file_table[NR_FILE];
+extern struct file file_table[NR_FILE];	
 extern struct super_block super_block[NR_SUPER];
 extern struct buffer_head * start_buffer;
 extern int nr_buffers;
